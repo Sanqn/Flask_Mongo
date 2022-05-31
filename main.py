@@ -12,7 +12,8 @@ app.config.from_object(Config)
 mongodb_client = PyMongo(app)
 db = mongodb_client.db
 
-
+# IF YOU WANNA USE HTML INTERFACE, USE THIS BLOCK
+################################################################
 # @app.route("/", methods=['get', 'post'])
 # def add_user():
 #     user_name = ''
@@ -26,6 +27,8 @@ db = mongodb_client.db
 #         message = flask.jsonify(message="success")
 #         return render_template('add_user.html', message=message)
 #     return render_template('add_user.html')
+##################################################################
+
 
 @app.route("/")
 def add_user():
@@ -33,7 +36,8 @@ def add_user():
     message = flask.jsonify(message="success")
     return message
 
-
+# IF YOU WANNA USE HTML INTERFACE, USE THIS BLOCK
+################################################################
 # @app.route("/find_user", methods=['get', 'post'])
 # def find_user_get():
 #     user_name = request.form.get('name')
@@ -44,7 +48,7 @@ def add_user():
 #     for i in data:
 #         jom[i['name']] = jom.get(i['name'], i['age'])
 #     return render_template('find_user.html', jom=jom)
-
+##################################################################
 
 @app.route("/find_user/<user_name>", methods=['get', 'post'])
 def find_user_get(user_name):
