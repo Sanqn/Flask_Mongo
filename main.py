@@ -15,6 +15,13 @@ mongodb_client = PyMongo(app)
 db = mongodb_client.db
 
 
+@app.route("/")
+def add_user():
+    db.users.insert_one({'name': 'Root', 'age': 25})
+    message = flask.jsonify(message="success")
+    return message
+
+
 # IF YOU WANNA USE HTML INTERFACE, USE THIS BLOCK
 ################################################################
 # @app.route("/", methods=['get', 'post'])
@@ -33,11 +40,11 @@ db = mongodb_client.db
 ##################################################################
 
 
-@app.route("/")
-def add_user():
-    db.users.insert_one({'name': 'Root', 'age': 25})
-    message = flask.jsonify(message="success")
-    return message
+@app.route("/find_user/<user_name>", methods=['get', 'post'])
+def find_user(user_name):
+    users = db.users.find({'name': user_name})
+    user = dumps(users)
+    return user
 
 
 # IF YOU WANNA USE HTML INTERFACE, USE THIS BLOCK
@@ -53,12 +60,6 @@ def add_user():
 #         jom[i['name']] = jom.get(i['name'], i['age'])
 #     return render_template('find_user.html', jom=jom)
 ##################################################################
-
-@app.route("/find_user/<user_name>", methods=['get', 'post'])
-def find_user(user_name):
-    users = db.users.find({'name': user_name})
-    user = dumps(users)
-    return user
 
 
 @app.route("/replace_user/<user_name>")
