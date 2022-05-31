@@ -1,3 +1,5 @@
+# I used localhost mongodb
+
 import flask
 from flask import Flask, render_template, request, jsonify, url_for
 from flask_pymongo import PyMongo
