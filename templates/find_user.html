@@ -1,22 +1,25 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
- <head>
-  <meta charset="utf-8">
-  <title>Find user</title>
- </head>
- <body>
+<head>
+    <meta charset="utf-8">
+    <title>Find user</title>
+</head>
+<body>
 
-    <form action="" method="post">
-        <p>
-	    <label for="name">Input name</label>
-	    <input type="text" name="name">
-	</p>
-	<p>
-	    <input type="submit">
-	</p>
-    </form>
-     <form action="" method="get">
-		<p>{{ name }} {{ age }}</p>
-    </form>
- </body>
+<form action="" method="post">
+    <p>
+        <label for="name">Input name</label>
+        <input type="text" name="name">
+    </p>
+    <p>
+        <input type="submit">
+    </p>
+</form>
+<form action="" method="get">
+    {% for name, age in jom|items() %}
+        <p>{{name}}</p>
+        <p>{{age}}</p>
+        {% endfor %}
+</form>
+</body>
 </html>
