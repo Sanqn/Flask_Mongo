@@ -22,7 +22,7 @@ def add_user():
     return message
 
 
-# IF YOU WANNA USE HTML INTERFACE, USE THIS BLOCK
+# IF YOU WANNA USE HTML INTERFACE(CREATE USER), USE THIS BLOCK
 ################################################################
 # @app.route("/", methods=['get', 'post'])
 # def add_user():
@@ -47,7 +47,7 @@ def find_user(user_name):
     return user
 
 
-# IF YOU WANNA USE HTML INTERFACE, USE THIS BLOCK
+# IF YOU WANNA USE HTML INTERFACE(FIND USER), USE THIS BLOCK
 ################################################################
 # @app.route("/find_user", methods=['get', 'post'])
 # def find_user_get():
