@@ -1,5 +1,4 @@
 # I used localhost mongodb
-
 import flask
 from flask import Flask, render_template, request, jsonify, url_for
 from flask_pymongo import PyMongo
@@ -7,6 +6,7 @@ from bson.json_util import dumps
 from werkzeug.utils import redirect
 from config import Config
 import json
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
 # app.config["MONGO_URI"] = "mongodb://localhost:27017/users"
@@ -15,11 +15,18 @@ mongodb_client = PyMongo(app)
 db = mongodb_client.db
 
 
-@app.route("/")
+@app.route("/", methods=['POST'])
 def add_user():
-    db.users.insert_one({'name': 'Root', 'age': 25})
-    message = flask.jsonify(message="success")
-    return message
+    data = request.json
+    name = data['name']
+    password = data['pwd']
+    email = data['email']
+
+    if name and email and password and request.method == 'POST':
+        hash_pass = generate_password_hash(password)
+        db.users.insert_one({'name': name, 'email': email, 'pwd': hash_pass})
+        message = flask.jsonify(message="success")
+        return message
 
 
 # IF YOU WANNA USE HTML INTERFACE(CREATE USER), USE THIS BLOCK
@@ -62,19 +69,41 @@ def find_user(user_name):
 ##################################################################
 
 
-@app.route("/replace_user/<user_name>")
+@app.route("/replace_user/<user_name>", methods=['PUT'])
 def replace_user(user_name):
-    user = db.users.find_one_and_replace({'name': user_name}, {'name': 'Jura'})
-    return dumps(user)
+    name = user_name
+    data = request.json
+    email = data['email']
+    password = data['pwd']
+
+    if name and email and password and request.method == 'PUT':
+        has_pass = generate_password_hash(password)
+        db.users.ind_one_and_replace({'name': name}, {"$set": {'email': email, 'pwd': has_pass}})
+        resp = jsonify(message='Update successfully')
+        resp.status_code = 200
+        return resp
+    else:
+        return not_found()
 
 
-@app.route("/update_user/<user_name>")
+@app.route("/update_user/<user_name>", methods=['PUT'])
 def update_user(user_name):
-    user = db.users.find_one_and_update({'name': user_name}, {"$set": {'age': 50}})
-    return dumps(user)
+    name = user_name
+    data = request.json
+    email = data['email']
+    password = data['pwd']
+
+    if name and email and password and request.method == 'PUT':
+        has_pass = generate_password_hash(password)
+        db.users.find_one_and_update({'name': name}, {"$set": {'email': email, 'pwd': has_pass}})
+        resp = jsonify(message='Update successfully')
+        resp.status_code = 200
+        return resp
+    else:
+        return not_found()
 
 
-@app.route("/delete_user/<user_name>")
+@app.route("/delete_user/<user_name>", methods=['DELETE'])
 def delete_user(user_name):
     user = db.users.find_one_and_delete({'name': user_name})
     if user is not None:
@@ -82,5 +111,17 @@ def delete_user(user_name):
     return "Name does not exist"
 
 
+@app.errorhandler(404)
+def not_found(error=None):
+    message = {
+        'status': 404,
+        'message': 'Not found' + request.url
+    }
+    resp = jsonify(message)
+    resp.status_code = 404
+
+    return resp
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
