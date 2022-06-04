@@ -69,7 +69,7 @@ def find_user(user_name):
 ##################################################################
 
 
-@app.route("/replace_user/<user_name>", methods=['PUT'])
+@app.route("/replace_user/<user_name>/", methods=['PUT'])
 def replace_user(user_name):
     name = user_name
     data = request.json
